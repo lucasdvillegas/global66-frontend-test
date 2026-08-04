@@ -68,7 +68,7 @@ const handleNext = () => {
           unelevated
           rounded
           no-caps
-          class="full-width text-weight-bold"
+          class="full-width text-btn"
         />
       </div>
     </div>

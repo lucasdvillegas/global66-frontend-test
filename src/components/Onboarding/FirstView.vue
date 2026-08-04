@@ -7,12 +7,10 @@
       <img src="~@/assets/images/ui/adult.svg" alt="Onboarding 1 - Adulto" class="img-adult" />
     </div>
 
-    <h1 class="text-h5 text-weight-bold text-grey-10 q-ma-none q-mb-sm leading-snug">
-      Mantén tu Pokédex actualizada
-    </h1>
+    <h1 class="title text-grey-10 q-ma-none q-mb-sm">Todos los Pokémon en un solo lugar</h1>
 
-    <p class="text-body2 text-grey-7 description-text q-ma-none">
-      Regístrate y guarda tu perfil, Pokémon favoritos, configuraciones y mucho más en la aplicación
+    <p class="description text-grey-7 q-ma-none">
+      Accede a una amplia lista de Pokémon de todas las generaciones creadas por Nintendo
     </p>
   </div>
 </template>
@@ -40,14 +38,5 @@
   height: 240px;
   object-fit: contain;
   transform: translateX(24px);
-}
-
-.description-text {
-  max-width: 280px;
-  line-height: 1.4;
-}
-
-.leading-snug {
-  line-height: 1.25;
 }
 </style>
