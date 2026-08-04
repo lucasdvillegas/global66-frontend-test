@@ -2,6 +2,8 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+import PokeLoader from '@/components/PokeLoader.vue'
+
 const router = useRouter()
 
 onMounted(() => {
@@ -14,11 +16,7 @@ onMounted(() => {
 <template>
   <q-page class="flex flex-center">
     <div class="column items-center">
-      <img
-        alt="Quasar logo"
-        src="~@/assets/images/ui/Loader.svg"
-        style="width: 200px; height: 200px"
-      />
+      <PokeLoader />
     </div>
   </q-page>
 </template>

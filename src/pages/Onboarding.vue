@@ -18,7 +18,9 @@ const handleNext = () => {
   if (currentStep.value < totalSteps) {
     currentStep.value++
   } else {
-    router.push('/pokedex')
+    router.push({
+      name: 'loading',
+    })
   }
 }
 </script>

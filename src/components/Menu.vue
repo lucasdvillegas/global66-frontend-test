@@ -46,7 +46,6 @@ const props = defineProps({
     default: '',
   },
 
-  // Mantener compatibilidad con prop 'link' anterior
   link: {
     type: String,
     default: null,

@@ -46,11 +46,16 @@ export default defineRouter((/* { store, ssrContext } */) => {
   // Rutas con layout
   const layoutRoutes = [
     {
-      path: '/pokedex',
+      path: '/main',
       component: () => import('@/layouts/MainLayout.vue'),
       children: [
         {
           path: '',
+          name: 'loading',
+          component: () => import('@/pages/LoadingScreen.vue'),
+        },
+        {
+          path: '/pokedex',
           name: 'Pokedex',
           component: () => import('@/pages/Pokedex/Index.vue'),
         },
@@ -62,12 +67,12 @@ export default defineRouter((/* { store, ssrContext } */) => {
         {
           path: '/favorites',
           name: 'Favorites',
-          component: () => import('@/pages/Pokedex/Favorites.vue'),
+          component: () => import('@/pages/Favorites.vue'),
         },
         {
-          path: '/profile',
-          name: 'Profile',
-          component: () => import('@/pages/Profile.vue'),
+          path: '/error',
+          name: 'Error',
+          component: () => import('@/pages/Error.vue'),
         },
       ],
     },
