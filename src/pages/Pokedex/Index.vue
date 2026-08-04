@@ -7,7 +7,8 @@
         style="width: 200px; height: 200px"
       />
 
-      <q-btn class="q-mt-md" color="primary" to="/second" label="Go to Second Page" no-caps />
+      <h1>Bienvenido a Home</h1>
+      <q-btn unelevated rounded to="/" color="primary" label="Ir al inicio" no-caps />
     </div>
   </q-page>
 </template>

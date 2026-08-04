@@ -1,5 +1,11 @@
 <template>
-  <q-item clickable tag="a" target="_blank" :href="props.link">
+  <q-item
+    clickable
+    :tag="props.to ? 'div' : 'a'"
+    :href="props.href"
+    :target="props.href ? '_blank' : undefined"
+    @click="handleClick"
+  >
     <q-item-section v-if="props.icon" avatar>
       <q-icon :name="props.icon" />
     </q-item-section>
@@ -12,6 +18,9 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const props = defineProps({
   label: {
     type: String,
@@ -23,14 +32,31 @@ const props = defineProps({
     default: '',
   },
 
-  link: {
+  href: {
     type: String,
-    default: '#',
+    default: null,
+  },
+
+  to: {
+    type: String,
+    default: null,
   },
 
   icon: {
     type: String,
     default: '',
   },
+
+  // Mantener compatibilidad con prop 'link' anterior
+  link: {
+    type: String,
+    default: null,
+  },
 })
+
+function handleClick() {
+  if (props.to) {
+    router.push(props.to)
+  }
+}
 </script>

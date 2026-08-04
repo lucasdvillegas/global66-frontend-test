@@ -23,9 +23,44 @@ export default defineRouter((/* { store, ssrContext } */) => {
       ? createWebHistory
       : createWebHashHistory
 
+  // Rutas sin layout
+  const noLayoutRoutes = [
+    {
+      path: '/',
+      component: () => import('@/layouts/SimpleLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'Splash',
+          component: () => import('@/pages/SplashScreen.vue'),
+        },
+        {
+          path: '/onboarding',
+          name: 'Onboarding',
+          component: () => import('@/pages/Onboarding.vue'),
+        },
+      ],
+    },
+  ]
+
+  // Rutas con layout
+  const layoutRoutes = [
+    {
+      path: '/pokedex',
+      component: () => import('@/layouts/MainLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'Pokedex',
+          component: () => import('@/pages/Pokedex/Index.vue'),
+        },
+      ],
+    },
+  ]
+
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
-    routes,
+    routes: [...noLayoutRoutes, ...layoutRoutes, ...routes],
 
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
