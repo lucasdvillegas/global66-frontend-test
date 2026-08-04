@@ -7,7 +7,7 @@
         style="width: 200px; height: 200px"
       />
 
-      <h1>Bienvenido a Pokedex</h1>
+      <h1>Bienvenido a Favorites</h1>
       <q-btn unelevated rounded to="/" color="primary" label="Ir al inicio" no-caps />
     </div>
   </q-page>

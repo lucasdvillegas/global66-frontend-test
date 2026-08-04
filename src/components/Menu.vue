@@ -6,13 +6,12 @@
     :target="props.href ? '_blank' : undefined"
     @click="handleClick"
   >
-    <q-item-section v-if="props.icon" avatar>
-      <q-icon :name="props.icon" />
+    <q-item-section v-if="props.icon" avatar class="q-pr-none">
+      <q-img :src="icon" style="width: 24px; height: 24px" />
     </q-item-section>
 
     <q-item-section>
       <q-item-label>{{ props.label }}</q-item-label>
-      <q-item-label caption>{{ props.caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>

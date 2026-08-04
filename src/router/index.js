@@ -54,6 +54,21 @@ export default defineRouter((/* { store, ssrContext } */) => {
           name: 'Pokedex',
           component: () => import('@/pages/Pokedex/Index.vue'),
         },
+        {
+          path: '/regions',
+          name: 'Regions',
+          component: () => import('@/pages/Regions.vue'),
+        },
+        {
+          path: '/favorites',
+          name: 'Favorites',
+          component: () => import('@/pages/Pokedex/Favorites.vue'),
+        },
+        {
+          path: '/profile',
+          name: 'Profile',
+          component: () => import('@/pages/Profile.vue'),
+        },
       ],
     },
   ]
