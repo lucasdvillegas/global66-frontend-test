@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 
@@ -11,9 +10,12 @@ import { useFavoritesStore } from '@/stores/favorites'
 import Card from '@/components/Pokedex/PokedexCard.vue'
 import PokemonGrid from '@/components/Pokedex/PokedexGrid.vue'
 import PokedexFilters from '@/components/Pokedex/PokedexFilters.vue'
+import EmptyState from '@/components/EmptyState.vue'
+
+// image
+import Magikarp from '@/assets/images/ui/magikarp_error.svg'
 
 const $q = useQuasar()
-const router = useRouter()
 const favoritesStore = useFavoritesStore()
 
 const BASE_URL = 'https://pokeapi.co/api/v2'
@@ -21,6 +23,7 @@ const limit = 12
 
 const pokemons = ref([])
 const searchedPokemon = ref(null)
+const hasError = ref(false)
 
 const offset = ref(0)
 const searchQuery = ref('')
@@ -94,12 +97,14 @@ function fetchInitialData() {
       },
     })
     .then((response) => {
+      hasError.value = false
+
       return appendPage(response.data)
     })
     .catch((error) => {
       console.error(error)
 
-      router.replace('/error')
+      hasError.value = true
     })
     .then(() => {
       initialLoading.value = false
@@ -171,12 +176,14 @@ const filteredPokemons = computed(() => {
   return list.filter((pokemon) => selectedTypes.value.every((type) => pokemon.types.includes(type)))
 })
 
-onBeforeMount(fetchInitialData)
+onMounted(() => {
+  fetchInitialData()
+})
 </script>
 
 <template>
-  <q-page>
-    <div class="q-pa-lg">
+  <q-page padding>
+    <div v-if="!hasError">
       <PokedexFilters
         v-model:search-query="searchQuery"
         v-model:selected-types="selectedTypes"
@@ -196,6 +203,16 @@ onBeforeMount(fetchInitialData)
           <Card :pokemon="pokemon" @toggle-favorite="toggleFavorite" />
         </template>
       </PokemonGrid>
+    </div>
+
+    <div v-else class="column justify-center items-center" style="min-height: calc(100vh - 180px)">
+      <EmptyState
+        :image="Magikarp"
+        title="Algo salió mal..."
+        description="No pudimos cargar la información en este momento. Verifica tu conexión o intenta nuevamente más tarde."
+        button-label="Reintentar"
+        @action="fetchInitialData"
+      />
     </div>
   </q-page>
 </template>

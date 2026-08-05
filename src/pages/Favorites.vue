@@ -1,7 +1,14 @@
 <script setup>
+//store
 import { useFavoritesStore } from '@/stores/favorites'
+
+//components
 import Card from '@/components/Pokedex/PokedexCard.vue'
 import PokemonGrid from '@/components/Pokedex/PokedexGrid.vue'
+import EmptyState from '@/components/EmptyState.vue'
+
+//image
+import Magikarp from '@/assets/images/ui/magikarp_error.svg'
 
 const favoritesStore = useFavoritesStore()
 
@@ -20,55 +27,46 @@ const onSwipeRight = (pokemon, reset) => {
 </script>
 <template>
   <q-page padding>
-    <div v-if="favoritesStore.pokemons.length > 0" class="q-pa-lg">
-      <div v-if="$q.screen.lt.sm" class="favorites-header q-mb-md">
-        <q-btn flat round dense icon="arrow_back_ios" @click="$router.back()" />
-        <div class="font-poppins text-h6 text-center">Favoritos</div>
-      </div>
-
-      <PokemonGrid
-        :pokemons="favoritesStore.pokemons"
-        :loading="false"
-        :initial-loading="false"
-        :has-more="false"
-        :disable-infinite="true"
-      >
-        <template #default="{ pokemon }">
-          <!-- 1. Retiramos "card-container" de aquí y usamos una nueva clase "swipe-item" -->
-          <q-slide-item
-            @right="({ reset }) => onSwipeRight(pokemon, reset)"
-            right-color="negative"
-            class="swipe-item bg-transparent"
-            style="border-radius: 18px"
-          >
-            <template v-slot:right>
-              <q-img
-                src="../assets/images/ui/trash.svg"
-                style="width: 40px; height: 40px"
-                class="q-mr-md"
-              />
-            </template>
-
-            <Card :pokemon="pokemon" @toggle-favorite="toggleFavorite" :favorite-enabled="false" />
-          </q-slide-item>
-        </template>
-      </PokemonGrid>
+    <div v-if="$q.screen.lt.sm && favoritesStore.pokemons.length" class="favorites-header q-mb-md">
+      <q-btn flat round dense icon="arrow_back_ios" @click="$router.back()" />
+      <div class="font-poppins text-h6 text-center">Favoritos</div>
     </div>
 
-    <div v-else class="flex flex-center q-pa-md">
-      <div class="column items-center full-width" style="max-width: 328px">
-        <div class="flex flex-center q-mb-md">
-          <img src="~@/assets/images/ui/magikarp_error.svg" alt="Onboarding 2 - Pokédex" />
-        </div>
+    <PokemonGrid
+      v-if="favoritesStore.pokemons.length"
+      :pokemons="favoritesStore.pokemons"
+      :loading="false"
+      :initial-loading="false"
+      :has-more="false"
+      :disable-infinite="true"
+    >
+      <template #default="{ pokemon }">
+        <!-- 1. Retiramos "card-container" de aquí y usamos una nueva clase "swipe-item" -->
+        <q-slide-item
+          @right="({ reset }) => onSwipeRight(pokemon, reset)"
+          right-color="negative"
+          class="swipe-item bg-transparent"
+          style="border-radius: 18px"
+        >
+          <template v-slot:right>
+            <q-img
+              src="../assets/images/ui/trash.svg"
+              style="width: 40px; height: 40px"
+              class="q-mr-md"
+            />
+          </template>
 
-        <h1 class="title text-grey-10 q-ma-none q-mb-sm text-center">
-          No has marcado ningún Pokémon como favorito
-        </h1>
+          <Card :pokemon="pokemon" @toggle-favorite="toggleFavorite" :favorite-enabled="false" />
+        </q-slide-item>
+      </template>
+    </PokemonGrid>
 
-        <p class="description text-grey-7 q-ma-none text-center">
-          Haz clic en el ícono de corazón de tus Pokémon favoritos y aparecerán aquí.
-        </p>
-      </div>
+    <div v-else class="column justify-center items-center" style="min-height: 70vh">
+      <EmptyState
+        :image="Magikarp"
+        title="No has marcado ningún Pokémon como favorito"
+        description="Haz clic en el ícono de corazón de tus Pokémon favoritos y aparecerán aquí."
+      />
     </div>
   </q-page>
 </template>

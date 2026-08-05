@@ -1,18 +1,16 @@
-<template>
-  <q-page class="flex flex-center">
-    <div class="column items-center">
-      <img
-        alt="Quasar logo"
-        src="~@/assets/images/ui/Loader.svg"
-        style="width: 200px; height: 200px"
-      />
+<script setup>
+import Magikarp from '@/assets/images/ui/jigglypuff_soon.svg'
+import EmptyState from '@/components/EmptyState.vue'
+</script>
 
-      <h1>Bienvenido a Regions</h1>
-      <q-btn unelevated rounded to="/" color="primary" label="Ir al inicio" no-caps />
+<template>
+  <q-page padding>
+    <div class="column justify-center items-center" style="min-height: 70vh">
+      <EmptyState
+        :image="Magikarp"
+        title="¡Muy pronto disponible!"
+        description="Estamos trabajando para traerte esta sección. Vuelve más adelante para descubrir todas las novedades."
+      />
     </div>
   </q-page>
 </template>
-
-<script setup>
-//
-</script>

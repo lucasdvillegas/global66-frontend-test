@@ -70,9 +70,9 @@ export default defineRouter((/* { store, ssrContext } */) => {
           component: () => import('@/pages/Profile.vue'),
         },
         {
-          path: '/error',
-          name: 'Error',
-          component: () => import('@/pages/Error.vue'),
+          path: '/not-found',
+          name: 'NotFound',
+          component: () => import('@/pages/NotFound.vue'),
         },
       ],
     },
@@ -80,7 +80,17 @@ export default defineRouter((/* { store, ssrContext } */) => {
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
-    routes: [...noLayoutRoutes, ...layoutRoutes, ...routes],
+    routes: [
+      ...noLayoutRoutes,
+      ...layoutRoutes,
+      ...routes,
+
+      // 404 not found
+      {
+        path: '/:pathMatch(.*)*',
+        redirect: '/not-found',
+      },
+    ],
 
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode

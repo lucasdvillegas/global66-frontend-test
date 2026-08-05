@@ -1,5 +1,5 @@
 <script setup>
-import Magikarp from '@/assets/images/ui/jigglypuff_soon.svg'
+import Magikarp from '@/assets/images/ui/magikarp_error.svg'
 import EmptyState from '@/components/EmptyState.vue'
 </script>
 
@@ -8,8 +8,8 @@ import EmptyState from '@/components/EmptyState.vue'
     <div class="column justify-center items-center" style="min-height: 70vh">
       <EmptyState
         :image="Magikarp"
-        title="¡Muy pronto disponible!"
-        description="Estamos trabajando para traerte esta sección. Vuelve más adelante para descubrir todas las novedades."
+        title="Página no encontrada"
+        description="Lo sentimos, no pudimos encontrar la página que buscas."
       />
     </div>
   </q-page>
