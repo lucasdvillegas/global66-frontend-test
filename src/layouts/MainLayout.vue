@@ -55,25 +55,25 @@ const linksList = [
     label: 'Pokedex',
     caption: 'Página de la Pokedex',
     icon: homeIcon,
-    to: '/pokedex',
+    to: 'pokedex',
   },
   {
     label: 'Regions',
     caption: 'Pantalla de regiones',
     icon: regionsIcon,
-    to: '/regions',
+    to: 'regions',
   },
   {
     label: 'Favoritos',
     caption: 'Página de favoritos',
     icon: favoritesIcon,
-    to: '/favorites',
+    to: 'favorites',
   },
   {
     label: 'Perfil',
     caption: 'Página de perfil',
     icon: userIcon,
-    to: '/profile',
+    to: 'profile',
   },
 ]
 

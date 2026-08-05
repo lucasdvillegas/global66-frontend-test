@@ -50,10 +50,6 @@ export default defineRouter((/* { store, ssrContext } */) => {
       component: () => import('@/layouts/MainLayout.vue'),
       children: [
         {
-          path: '',
-          redirect: { name: 'Pokedex' },
-        },
-        {
           path: '/pokedex',
           name: 'Pokedex',
           component: () => import('@/pages/Pokedex/Index.vue'),

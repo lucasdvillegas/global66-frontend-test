@@ -7,6 +7,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+
+  favoriteEnabled: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['toggle-favorite'])
@@ -61,17 +66,15 @@ const handleFavoriteClick = () => {
         class="absolute watermark-icon pointer-events-none select-none"
       />
 
-      <button
-        type="button"
-        class="favorite-btn absolute-top-right q-ma-sm z-top cursor-pointer row items-center justify-center"
-        @click.stop="handleFavoriteClick"
-      >
-        <q-icon
-          :name="pokemon.isFavorite ? 'favorite' : 'favorite_border'"
-          size="20px"
-          :color="pokemon.isFavorite ? 'red-6' : 'white'"
-        />
-      </button>
+      <q-btn
+        round
+        dense
+        flat
+        class="favorite-btn absolute-top-right q-ma-sm"
+        :icon="pokemon.isFavorite ? 'favorite' : 'favorite_border'"
+        :text-color="pokemon.isFavorite ? 'red-6' : 'white'"
+        @click.stop="favoriteEnabled ? handleFavoriteClick() : null"
+      />
 
       <img :src="pokemon.image" :alt="pokemon.name" class="pokemon-img fit-contain z-top" />
     </div>
@@ -122,13 +125,10 @@ const handleFavoriteClick = () => {
 .favorite-btn {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   border: 2px solid rgba(255, 255, 255, 0.6);
-  padding: 0;
-  outline: none;
 }
 
 .pokemon-img {

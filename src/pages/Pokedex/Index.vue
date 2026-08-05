@@ -4,12 +4,17 @@ import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 
+// store
+import { useFavoritesStore } from '@/stores/favorites'
+
+// components
 import Card from '@/components/Pokedex/PokedexCard.vue'
 import PokemonGrid from '@/components/Pokedex/PokedexGrid.vue'
 import PokedexFilters from '@/components/Pokedex/PokedexFilters.vue'
 
-const router = useRouter()
 const $q = useQuasar()
+const router = useRouter()
+const favoritesStore = useFavoritesStore()
 
 const BASE_URL = 'https://pokeapi.co/api/v2'
 const limit = 12
@@ -32,7 +37,7 @@ const mapPokemonDetail = (detail) => ({
   name: detail.name,
   image: detail.sprites.front_default,
   types: detail.types.map((t) => t.type.name),
-  isFavorite: false,
+  isFavorite: favoritesStore.isFavorite(detail.id),
 })
 
 // traer el detalle de un pokemon por url
@@ -152,6 +157,8 @@ const appendPage = (data) => {
 // agregar a favoritos o quitar de favoritos
 const toggleFavorite = (pokemon) => {
   pokemon.isFavorite = !pokemon.isFavorite
+
+  favoritesStore.toggleFavorite(pokemon)
 }
 
 const filteredPokemons = computed(() => {
