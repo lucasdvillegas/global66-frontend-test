@@ -73,6 +73,11 @@ export default defineRouter((/* { store, ssrContext } */) => {
           name: 'Profile',
           component: () => import('@/pages/Profile.vue'),
         },
+        {
+          path: '/error',
+          name: 'Error',
+          component: () => import('@/pages/Error.vue'),
+        },
       ],
     },
   ]

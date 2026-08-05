@@ -20,7 +20,7 @@
           no-caps
           class="full-width text-btn"
           label="Reintentar"
-          to="/"
+          to="/pokedex"
         />
       </div>
     </div>

@@ -92,15 +92,6 @@ function fetchInitialData() {
       return appendPage(response.data)
     })
     .catch((error) => {
-      const message = error.response?.data?.message || 'Disculpe, no se pudo procesar su solicitud.'
-
-      $q.notify({
-        color: 'negative',
-        position: 'top',
-        message,
-        icon: 'mdi-alert',
-      })
-
       console.error(error)
 
       router.replace('/error')
@@ -131,15 +122,6 @@ function fetchMorePokemons(index, done) {
       return appendPage(response.data)
     })
     .catch((error) => {
-      const message = error.response?.data?.message || 'Disculpe, no se pudo procesar su solicitud.'
-
-      $q.notify({
-        color: 'negative',
-        position: 'top',
-        message,
-        icon: 'mdi-alert',
-      })
-
       console.error(error)
     })
     .then(() => {
