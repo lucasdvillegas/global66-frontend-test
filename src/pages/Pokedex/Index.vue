@@ -1,127 +1,212 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import Card from '@/components/Pokedex/Card.vue'
-import { usePokedexStore } from '@/stores/pokedex-store'
-import { fetchPokemonPage, fetchPokemonDetails } from '@/services/pokemonService'
+import { ref, computed, onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
+import axios from 'axios'
 
-const pokedexStore = usePokedexStore()
+import Card from '@/components/Pokedex/PokedexCard.vue'
+import PokemonGrid from '@/components/Pokedex/PokedexGrid.vue'
+import PokedexFilters from '@/components/Pokedex/PokedexFilters.vue'
 
-const limit = 5
+const router = useRouter()
+const $q = useQuasar()
+
+const BASE_URL = 'https://pokeapi.co/api/v2'
+const limit = 12
+
 const pokemons = ref([])
+const searchedPokemon = ref(null)
+
 const offset = ref(0)
 const searchQuery = ref('')
+
 const initialLoading = ref(true)
 const loading = ref(false)
 const hasMore = ref(true)
 
-const appendUnique = (newPokemons) => {
-  const existingIds = new Set(pokemons.value.map((p) => p.id))
-  pokemons.value.push(...newPokemons.filter((p) => !existingIds.has(p.id)))
+const selectedTypes = ref([])
+
+// mapear la información del pokemon para las cards
+const mapPokemonDetail = (detail) => ({
+  id: detail.id,
+  name: detail.name,
+  image: detail.sprites.front_default,
+  types: detail.types.map((t) => t.type.name),
+  isFavorite: false,
+})
+
+// traer el detalle de un pokemon por url
+function fetchPokemonDetail(url) {
+  return axios
+    .get(url)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error(error)
+      return null
+    })
 }
 
-const appendPage = (data) => {
-  hasMore.value = !!data.next
-  return fetchPokemonDetails(data.results).then((newPokemons) => {
-    offset.value += limit
-    appendUnique(newPokemons)
-  })
+function fetchPokemonByName(name) {
+  const pokemonName = name.trim().toLowerCase()
+
+  if (!pokemonName) {
+    searchedPokemon.value = null
+    return Promise.resolve()
+  }
+
+  $q.loading.show()
+
+  return axios
+    .get(`${BASE_URL}/pokemon/${pokemonName}`)
+    .then((response) => {
+      searchedPokemon.value = mapPokemonDetail(response.data)
+    })
+    .catch((error) => {
+      searchedPokemon.value = null
+
+      $q.notify({
+        color: 'negative',
+        position: 'top',
+        message: 'No se encontró el Pokémon ingresado.',
+        icon: 'mdi-alert',
+      })
+
+      console.error(error)
+    })
+    .then(() => {
+      $q.loading.hide()
+    })
 }
 
-const onLoadMore = (index, done) => {
-  if (!hasMore.value || loading.value) {
+function fetchInitialData() {
+  $q.loading.show()
+
+  return axios
+    .get(`${BASE_URL}/pokemon`, {
+      params: {
+        limit,
+        offset: 0,
+      },
+    })
+    .then((response) => {
+      return appendPage(response.data)
+    })
+    .catch((error) => {
+      const message = error.response?.data?.message || 'Disculpe, no se pudo procesar su solicitud.'
+
+      $q.notify({
+        color: 'negative',
+        position: 'top',
+        message,
+        icon: 'mdi-alert',
+      })
+
+      console.error(error)
+
+      router.replace('/error')
+    })
+    .then(() => {
+      initialLoading.value = false
+      $q.loading.hide()
+    })
+}
+
+// cargar más pokemons al scrollear
+function fetchMorePokemons(index, done) {
+  if (!hasMore.value || loading.value || searchQuery.value) {
     done()
     return
   }
 
   loading.value = true
-  fetchPokemonPage({ limit, offset: offset.value })
-    .then((data) => appendPage(data))
-    .catch((error) => {
-      console.error('Error fetching pokemons:', error)
+
+  return axios
+    .get(`${BASE_URL}/pokemon`, {
+      params: {
+        limit,
+        offset: offset.value,
+      },
     })
-    .finally(() => {
+    .then((response) => {
+      return appendPage(response.data)
+    })
+    .catch((error) => {
+      const message = error.response?.data?.message || 'Disculpe, no se pudo procesar su solicitud.'
+
+      $q.notify({
+        color: 'negative',
+        position: 'top',
+        message,
+        icon: 'mdi-alert',
+      })
+
+      console.error(error)
+    })
+    .then(() => {
       loading.value = false
-      initialLoading.value = false
       done()
     })
 }
 
-onMounted(() => {
-  if (pokedexStore.initialData) {
-    appendPage(pokedexStore.initialData).finally(() => {
-      initialLoading.value = false
-      pokedexStore.clearInitialData()
-    })
-  } else {
-    onLoadMore(0, () => {})
-  }
-})
+// agregar nuevos pokemons evitando duplicados
+const appendUnique = (newPokemons) => {
+  const ids = new Set(pokemons.value.map((pokemon) => pokemon.id))
 
+  pokemons.value.push(...newPokemons.filter((pokemon) => !ids.has(pokemon.id)))
+}
+
+// procesar una página de resultados y agregar los detalles de cada pokemon
+const appendPage = (data) => {
+  hasMore.value = !!data.next
+
+  return Promise.all(
+    data.results.map((pokemon) => fetchPokemonDetail(pokemon.url).then(mapPokemonDetail)),
+  ).then((newPokemons) => {
+    offset.value += limit
+    appendUnique(newPokemons)
+  })
+}
+
+// agregar a favoritos o quitar de favoritos
 const toggleFavorite = (pokemon) => {
   pokemon.isFavorite = !pokemon.isFavorite
 }
 
 const filteredPokemons = computed(() => {
-  return pokemons.value.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      p.id.toString().includes(searchQuery.value),
-  )
+  const list = searchedPokemon.value ? [searchedPokemon.value] : pokemons.value
+
+  if (!selectedTypes.value.length) {
+    return list
+  }
+
+  return list.filter((pokemon) => selectedTypes.value.every((type) => pokemon.types.includes(type)))
 })
+
+onBeforeMount(fetchInitialData)
 </script>
+
 <template>
   <q-page>
-    <div class="q-pa-md max-width-container">
-      <div class="row items-center q-gutter-x-sm q-mb-md">
-        <q-input
-          v-model="searchQuery"
-          placeholder="Buscar Pokémon..."
-          outlined
-          rounded
-          dense
-          class="col bg-slate-1 shadow-0"
-          input-class="q-px-sm text-body1"
-        >
-          <template #prepend>
-            <q-icon name="search" color="grey-6" />
-          </template>
-        </q-input>
+    <div class="q-pa-lg">
+      <PokedexFilters
+        v-model:search-query="searchQuery"
+        v-model:selected-types="selectedTypes"
+        @search="fetchPokemonByName"
+      />
 
-        <q-btn outline round color="grey-5" icon="tune" size="md" class="shrink-0" />
-      </div>
-
-      <div v-if="initialLoading" class="row justify-center q-py-xl">
-        <q-spinner color="primary" size="3em" />
-      </div>
-
-      <q-scroll-area v-show="!initialLoading" style="height: 85vh">
-        <q-infinite-scroll @load="onLoadMore" :offset="100" :disable="!!searchQuery">
-          <div class="column q-gutter-y-md q-pa-md">
-            <Card
-              v-for="pokemon in filteredPokemons"
-              :key="pokemon.id"
-              :pokemon="pokemon"
-              @toggle-favorite="toggleFavorite"
-            />
-          </div>
-
-          <template #loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner-dots color="primary" size="40px" />
-            </div>
-          </template>
-        </q-infinite-scroll>
-      </q-scroll-area>
+      <PokemonGrid
+        :pokemons="filteredPokemons"
+        :loading="loading"
+        :initial-loading="initialLoading"
+        :has-more="hasMore"
+        :disable-infinite="!!searchedPokemon"
+        infinite
+        @load-more="fetchMorePokemons"
+      >
+        <template #default="{ pokemon }">
+          <Card :pokemon="pokemon" @toggle-favorite="toggleFavorite" />
+        </template>
+      </PokemonGrid>
     </div>
   </q-page>
 </template>
-
-<style scoped>
-.max-width-container {
-  max-width: 600px;
-  margin: 0 auto;
-}
-.bg-slate-1 {
-  background-color: #f8fafc;
-}
-</style>

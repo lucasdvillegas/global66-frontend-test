@@ -51,8 +51,7 @@ export default defineRouter((/* { store, ssrContext } */) => {
       children: [
         {
           path: '',
-          name: 'loading',
-          component: () => import('@/pages/LoadingScreen.vue'),
+          redirect: { name: 'Pokedex' },
         },
         {
           path: '/pokedex',
@@ -70,9 +69,9 @@ export default defineRouter((/* { store, ssrContext } */) => {
           component: () => import('@/pages/Favorites.vue'),
         },
         {
-          path: '/error',
-          name: 'Error',
-          component: () => import('@/pages/Error.vue'),
+          path: '/profile',
+          name: 'Profile',
+          component: () => import('@/pages/Profile.vue'),
         },
       ],
     },

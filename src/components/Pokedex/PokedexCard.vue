@@ -1,4 +1,3 @@
-<!-- src/components/Pokedex/Card.vue -->
 <script setup>
 import { typeStyles } from '@/utils/pokemonColors.js'
 import { getElementIcon, getElementLabelES } from '@/utils/pokemonElements.js'

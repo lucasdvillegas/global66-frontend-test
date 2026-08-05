@@ -19,7 +19,7 @@ const handleNext = () => {
     currentStep.value++
   } else {
     router.push({
-      name: 'loading',
+      name: 'Pokedex',
     })
   }
 }
