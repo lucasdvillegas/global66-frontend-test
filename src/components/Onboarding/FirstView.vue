@@ -1,4 +1,5 @@
 <script setup>
+// icons
 import Young from '@/assets/images/ui/young.svg?url'
 import Adult from '@/assets/images/ui/adult.svg?url'
 </script>

@@ -1,4 +1,5 @@
 <script setup>
+// icons
 import Hilda from '@/assets/images/ui/hilda.svg?url'
 </script>
 

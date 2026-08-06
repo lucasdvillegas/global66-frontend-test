@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
+// components
 import PokeLoader from '@/components/PokeLoader.vue'
 
 const router = useRouter()

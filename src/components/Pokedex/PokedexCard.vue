@@ -1,5 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
+
+// utils
 import { typeStyles } from '@/utils/pokemonColors.js'
 import { getElementIcon, getElementLabelES } from '@/utils/pokemonElements.js'
 

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
+// components
 import PokedexTypesFilters from '@/components/Pokedex/PokedexTypesFilters.vue'
 
 const emit = defineEmits(['search', 'apply'])
