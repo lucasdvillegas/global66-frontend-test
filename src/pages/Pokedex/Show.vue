@@ -3,7 +3,11 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
+
+//store
 import { useFavoritesStore } from '@/stores/favorites'
+
+//utils
 import { typeStyles } from '@/utils/pokemonColors.js'
 import { getElementIcon, getElementLabelES } from '@/utils/pokemonElements.js'
 
@@ -82,6 +86,30 @@ const toggleFavorite = () => {
   favoritesStore.toggleFavorite(pokemon.value)
 }
 
+const copyPokemonInfo = async () => {
+  if (!pokemon.value) return
+
+  // Armar el texto: Nombre, tipos, peso, altura, categoría, habilidad, ID formateado
+  const typesText = pokemon.value.types.map((t) => getElementLabelES(t)).join(', ')
+  const infoText = `${pokemon.value.name}, Nº${String(pokemon.value.id).padStart(3, '0')}, Tipos: ${typesText}, Peso: ${pokemon.value.weight}kg, Altura: ${pokemon.value.height}m, Categoría: ${getCategory()}, Habilidad: ${pokemon.value.ability}`
+
+  try {
+    await navigator.clipboard.writeText(infoText)
+    $q.notify({
+      color: 'positive',
+      message: '¡Información copiada al portapapeles!',
+      icon: 'content_copy',
+      timeout: 2000,
+    })
+  } catch (err) {
+    console.error('Error al copiar al portapapeles', err)
+    $q.notify({
+      color: 'negative',
+      message: 'No se pudo copiar la información.',
+    })
+  }
+}
+
 const getDescription = () => {
   if (!speciesData.value) return 'Cargando descripción...'
   const entry = speciesData.value.flavor_text_entries.find((entry) => entry.language.name === 'es')
@@ -108,7 +136,7 @@ onMounted(() => {
 
 <template>
   <q-page v-if="!loading && pokemon" class="bg-white">
-    <!-- Header curvo con color dinámico según el tipo -->
+    <!-- curve header -->
     <div
       class="header-curved relative-position flex flex-center q-pb-xl"
       :style="{
@@ -131,18 +159,32 @@ onMounted(() => {
         <circle cx="186" cy="22" r="249" fill="currentColor" />
       </svg>
 
-      <!-- Botones superiores -->
+      <!-- top bttns -->
       <div class="absolute-top row justify-between items-center q-pa-md z-top">
         <q-btn flat round dense icon="arrow_back_ios_new" color="white" @click="router.back()" />
-        <q-btn
-          flat
-          round
-          dense
-          class="favorite-top-btn"
-          :icon="pokemon.isFavorite ? 'favorite' : 'favorite_border'"
-          :color="pokemon.isFavorite ? 'red-6' : 'white'"
-          @click="toggleFavorite"
-        />
+
+        <div class="row items-center q-gutter-x-sm">
+          <q-btn
+            flat
+            round
+            dense
+            class="favorite-top-btn"
+            icon="share"
+            color="white"
+            @click="copyPokemonInfo"
+          >
+            <q-tooltip>Compartir / Copiar datos</q-tooltip>
+          </q-btn>
+          <q-btn
+            flat
+            round
+            dense
+            class="favorite-top-btn"
+            :icon="pokemon.isFavorite ? 'favorite' : 'favorite_border'"
+            :color="pokemon.isFavorite ? 'red-6' : 'white'"
+            @click="toggleFavorite"
+          />
+        </div>
       </div>
 
       <!-- header image content -->
