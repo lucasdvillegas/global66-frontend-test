@@ -61,12 +61,50 @@ quasar build
 
 ## Plus
 
+Estas dos secciones (testing y compatibilidad con Android) son un plus por fuera del alcance base del proyecto.
+
+### Testing
+
 La documentación en **[Quasar Framework 2](https://quasar.dev/quasar-cli-vite/testing-and-auditing)** sobre testing con vitest está desactualizada por lo que se tuvo que implementar de forma personalizada. Para esto se renegó un poco con Copilot - Claude Sonnet 5 y Chat GPT.
 
 El test sólo se implemento en el Index.vue para corroborar que proceda correctamente tanto en el éxito como en la falla y, queda a modo de ejemplo para futuros usos en otros proyectos.
 
-### Correr los tests
+#### Correr los tests
 
 ```bash
 npx vitest run
 ```
+
+### Cordova (Android)
+
+El proyecto soporta Android vía [Cordova](https://quasar.dev/quasar-cli-vite/developing-cordova-apps/introduction), con `quasar mode add cordova` (carpeta `src-cordova/`, plataforma `android` ya agregada).
+
+Para requisitos previos (Cordova CLI, Android SDK, JDK, emuladores/AVD) seguí la [documentación oficial de Quasar + Cordova](https://quasar.dev/quasar-cli-vite/developing-cordova-apps/preparation).
+
+#### Versiones (`cordova-android`)
+
+- `cordova-android`: 15.1.0
+- `minSdkVersion` / target-compile SDK: 24 (Android 7.0) / 36 (Android 16)
+- Gradle 8.14.2 · AGP 8.10.1 · Java 11
+
+Definidas en `src-cordova/platforms/android/cdv-gradle-config.json`, se regeneran automáticamente al correr `cordova prepare`/`cordova build`.
+
+#### Correr en un emulador de Android
+
+Con un AVD (o dispositivo físico) ya iniciado y visible en `adb devices`:
+
+```bash
+quasar dev -m cordova -T android
+```
+
+#### Generar el `.apk` (build para pruebas directamente en tu celu)
+
+> ⚠️ **Importante**: `src-cordova/www/` es una carpeta auto-generada. Si corrés `cordova build android` directamente (sin pasar antes por `quasar build`), Cordova empaqueta el placeholder por defecto ("This file will be auto-generated...") en vez de la app real. Siempre generá primero el build de Quasar.
+
+```bash
+quasar build -m cordova -T android
+cd src-cordova
+cordova build android --packageType=apk
+```
+
+El `.apk` de debug queda en `src-cordova/platforms/android/app/build/outputs/apk/debug/app-debug.apk` y podés probarlo directamente desde tu celu.
