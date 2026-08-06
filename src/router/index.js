@@ -1,5 +1,4 @@
 import { defineRouter } from '#q-app'
-import { routes, handleHotUpdate } from 'vue-router/auto-routes'
 import {
   createMemoryHistory,
   createRouter,
@@ -87,7 +86,6 @@ export default defineRouter((/* { store, ssrContext } */) => {
     routes: [
       ...noLayoutRoutes,
       ...layoutRoutes,
-      ...routes,
 
       // 404 not found
       {
@@ -101,11 +99,6 @@ export default defineRouter((/* { store, ssrContext } */) => {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(import.meta.env.QUASAR_VUE_ROUTER_BASE),
   })
-
-  // enable HMR for it
-  if (import.meta.hot) {
-    handleHotUpdate(Router)
-  }
 
   return Router
 })
