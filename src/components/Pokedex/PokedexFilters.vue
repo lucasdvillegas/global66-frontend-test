@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import PokedexTypesFilters from '@/components/Pokedex/PokedexTypesFilters.vue'
 
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search', 'apply'])
 
 const searchQuery = defineModel('searchQuery', {
   type: String,
@@ -44,7 +44,11 @@ function searchPokemon() {
       <q-btn outline round icon="search" color="grey-5" @click="filtersDialog = true" />
 
       <q-dialog v-model="filtersDialog" position="bottom">
-        <PokedexTypesFilters v-model="selectedTypes" @close="filtersDialog = false" />
+        <PokedexTypesFilters
+          v-model="selectedTypes"
+          @apply="emit('apply')"
+          @close="filtersDialog = false"
+        />
       </q-dialog>
     </div>
   </div>

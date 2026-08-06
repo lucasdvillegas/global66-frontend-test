@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'apply'])
 
 const selectedTypes = defineModel({
   default: [],
@@ -39,6 +39,7 @@ watch(
 
 const applyFilters = () => {
   selectedTypes.value = [...temporaryTypes.value]
+  emit('apply')
   emit('close')
 }
 

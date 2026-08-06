@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 
@@ -86,6 +86,44 @@ function fetchPokemonByName(name) {
     })
 }
 
+function fetchPokemonsByType() {
+  const type = selectedTypes.value[0]
+
+  if (!type) {
+    pokemons.value = []
+    offset.value = 0
+    hasMore.value = true
+
+    return fetchInitialData()
+  }
+
+  $q.loading.show()
+
+  return axios
+    .get(`${BASE_URL}/type/${type}`)
+    .then((response) =>
+      Promise.all(
+        response.data.pokemon.map(({ pokemon }) =>
+          fetchPokemonDetail(pokemon.url).then(mapPokemonDetail),
+        ),
+      ),
+    )
+    .then((pokemonsList) => {
+      pokemons.value = pokemonsList
+      hasError.value = false
+      hasMore.value = false
+    })
+    .catch((error) => {
+      console.error(error)
+
+      hasError.value = true
+    })
+    .then(() => {
+      initialLoading.value = false
+      $q.loading.hide()
+    })
+}
+
 function fetchInitialData() {
   $q.loading.show()
 
@@ -166,16 +204,6 @@ const toggleFavorite = (pokemon) => {
   favoritesStore.toggleFavorite(pokemon)
 }
 
-const filteredPokemons = computed(() => {
-  const list = searchedPokemon.value ? [searchedPokemon.value] : pokemons.value
-
-  if (!selectedTypes.value.length) {
-    return list
-  }
-
-  return list.filter((pokemon) => selectedTypes.value.every((type) => pokemon.types.includes(type)))
-})
-
 onMounted(() => {
   fetchInitialData()
 })
@@ -188,14 +216,15 @@ onMounted(() => {
         v-model:search-query="searchQuery"
         v-model:selected-types="selectedTypes"
         @search="fetchPokemonByName"
+        @apply="fetchPokemonsByType"
       />
 
       <PokemonGrid
-        :pokemons="filteredPokemons"
+        :pokemons="searchedPokemon ? [searchedPokemon] : pokemons"
         :loading="loading"
         :initial-loading="initialLoading"
         :has-more="hasMore"
-        :disable-infinite="!!searchedPokemon"
+        :disable-infinite="!!searchedPokemon || !!selectedTypes.length"
         infinite
         @load-more="fetchMorePokemons"
       >
