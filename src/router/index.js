@@ -55,6 +55,10 @@ export default defineRouter((/* { store, ssrContext } */) => {
           component: () => import('@/pages/Pokedex/Index.vue'),
         },
         {
+          path: '/pokedex/:id',
+          component: () => import('@/pages/Pokedex/Show.vue'),
+        },
+        {
           path: '/regions',
           name: 'Regions',
           component: () => import('@/pages/Regions.vue'),

@@ -1,13 +1,15 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { typeStyles } from '@/utils/pokemonColors.js'
 import { getElementIcon, getElementLabelES } from '@/utils/pokemonElements.js'
+
+const router = useRouter()
 
 const props = defineProps({
   pokemon: {
     type: Object,
     required: true,
   },
-
   favoriteEnabled: {
     type: Boolean,
     default: true,
@@ -19,13 +21,18 @@ const emit = defineEmits(['toggle-favorite'])
 const handleFavoriteClick = () => {
   emit('toggle-favorite', props.pokemon)
 }
+
+const goToDetail = () => {
+  router.push(`/pokedex/${props.pokemon.id}`)
+}
 </script>
 
 <template>
   <q-card
     flat
-    class="card-container relative-position row no-wrap overflow-hidden"
+    class="card-container relative-position row no-wrap overflow-hidden cursor-pointer"
     :style="{ backgroundColor: typeStyles[pokemon.types[0]]?.bgCard || typeStyles.default.bgCard }"
+    @click="goToDetail"
   >
     <!-- left side -->
     <div class="col column justify-between q-pa-md z-top">
@@ -53,7 +60,7 @@ const handleFavoriteClick = () => {
       </div>
     </div>
 
-    <!-- right side (Pokemon image + type watermark) -->
+    <!-- right side -->
     <div
       class="right-side relative-position row items-center justify-center overflow-hidden shrink-0"
       :style="{
