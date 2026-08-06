@@ -8,7 +8,8 @@ import PokemonGrid from '@/components/Pokedex/PokedexGrid.vue'
 import EmptyState from '@/components/EmptyState.vue'
 
 //image
-import Magikarp from '@/assets/images/ui/magikarp_error.svg'
+import Magikarp from '@/assets/images/ui/magikarp_error.svg?url'
+import Trash from '@/assets/images/ui/trash.svg?url'
 
 const favoritesStore = useFavoritesStore()
 
@@ -17,7 +18,7 @@ const toggleFavorite = (pokemon) => {
   favoritesStore.toggleFavorite(pokemon)
 }
 
-// Permite quitar el favorito deslizando la card (Slide Item)
+// Permite saca el favorito deslizando la card (Slide Item)
 const onSwipeRight = (pokemon, reset) => {
   favoritesStore.removeFavorite(pokemon.id)
   // Al eliminar el item de la lista, Vue re-renderiza,
@@ -41,19 +42,14 @@ const onSwipeRight = (pokemon, reset) => {
       :disable-infinite="true"
     >
       <template #default="{ pokemon }">
-        <!-- 1. Retiramos "card-container" de aquí y usamos una nueva clase "swipe-item" -->
         <q-slide-item
           @right="({ reset }) => onSwipeRight(pokemon, reset)"
           right-color="negative"
-          class="swipe-item bg-transparent"
-          style="border-radius: 18px"
+          class="swipe-item"
+          style="border-radius: 20px"
         >
           <template v-slot:right>
-            <q-img
-              src="../assets/images/ui/trash.svg"
-              style="width: 40px; height: 40px"
-              class="q-mr-md"
-            />
+            <q-img :src="Trash" style="width: 40px; height: 40px" class="q-mr-md" />
           </template>
 
           <Card :pokemon="pokemon" @toggle-favorite="toggleFavorite" :favorite-enabled="false" />
@@ -86,7 +82,7 @@ const onSwipeRight = (pokemon, reset) => {
 
 .card-container {
   height: 115px;
-  border-radius: 18px !important;
+  border-radius: 20px !important;
   transition: transform 0.15s ease-in-out;
 }
 
@@ -95,6 +91,15 @@ const onSwipeRight = (pokemon, reset) => {
 }
 
 .q-slide-item {
-  border-radius: 12px;
+  border-radius: 20px;
+}
+
+.swipe-item {
+  border-radius: 20px;
+}
+
+.swipe-item :deep(.q-slide-item__content) {
+  border-radius: 20px;
+  overflow: hidden;
 }
 </style>

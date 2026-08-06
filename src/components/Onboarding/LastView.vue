@@ -1,9 +1,11 @@
-<script setup></script>
+<script setup>
+import Hilda from '@/assets/images/ui/hilda.svg?url'
+</script>
 
 <template>
   <div class="column items-center full-width">
     <div class="image-wrapper flex flex-center">
-      <img src="~@/assets/images/ui/hilda.svg" alt="Onboarding 2 - Pokédex" class="img-main" />
+      <img :src="Hilda" alt="Hilda - Maestra Pokemon" class="img-main" />
     </div>
 
     <h1 class="title text-grey-10 q-ma-none q-mb-sm">Mantén tu Pokédex actualizada</h1>

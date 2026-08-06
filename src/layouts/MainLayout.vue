@@ -16,22 +16,21 @@
       <router-view />
     </q-page-container>
 
-    <q-footer v-if="$q.screen.lt.sm" class="bg-white text-grey-8">
+    <!-- mobile bottom bar -->
+    <q-footer v-if="$q.screen.lt.sm" class="bg-white text-grey-8 custom-bottom-bar">
       <q-tabs
         no-caps
         active-color="primary"
         indicator-color="transparent"
         class="mobile-bottom-nav"
       >
-        <q-route-tab
-          v-for="link in linksList"
-          :key="link.label"
-          :to="link.to"
-          :label="link.label"
-          :icon="`img:${link.icon}`"
-          icon-size="20px"
-          exact
-        />
+        <q-route-tab v-for="link in linksList" :key="link.label" :to="link.to" exact>
+          <component :is="link.icon" class="tab-icon" />
+
+          <div class="q-tab__label font-poppins">
+            {{ link.label }}
+          </div>
+        </q-route-tab>
       </q-tabs>
     </q-footer>
   </q-layout>
@@ -42,11 +41,11 @@ import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import Menu from '@/components/Menu.vue'
 
-// import images
-import homeIcon from '../assets/images/ui/menu/home.svg'
-import regionsIcon from '../assets/images/ui/menu/regions.svg'
-import favoritesIcon from '../assets/images/ui/menu/favorites.svg'
-import userIcon from '../assets/images/ui/menu/user.svg'
+// import svg like components
+import HomeIcon from '../assets/images/ui/menu/home.svg'
+import RegionsIcon from '../assets/images/ui/menu/regions.svg'
+import FavoritesIcon from '../assets/images/ui/menu/favorites.svg'
+import UserIcon from '../assets/images/ui/menu/user.svg'
 
 const $q = useQuasar()
 
@@ -54,26 +53,26 @@ const linksList = [
   {
     label: 'Pokedex',
     caption: 'Página de la Pokedex',
-    icon: homeIcon,
-    to: 'pokedex',
+    icon: HomeIcon,
+    to: '/pokedex',
   },
   {
     label: 'Regions',
     caption: 'Pantalla de regiones',
-    icon: regionsIcon,
-    to: 'regions',
+    icon: RegionsIcon,
+    to: '/regions',
   },
   {
     label: 'Favoritos',
     caption: 'Página de favoritos',
-    icon: favoritesIcon,
-    to: 'favorites',
+    icon: FavoritesIcon,
+    to: '/favorites',
   },
   {
     label: 'Perfil',
     caption: 'Página de perfil',
-    icon: userIcon,
-    to: 'profile',
+    icon: UserIcon,
+    to: '/profile',
   },
 ]
 
@@ -85,9 +84,30 @@ function toggleLeftDrawer() {
 </script>
 
 <style scoped>
+.custom-bottom-bar {
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0px -4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  height: 77px;
+}
+
+.mobile-bottom-nav :deep(.q-tab) {
+  min-height: 77px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .mobile-bottom-nav :deep(.q-tab__label) {
   font-size: 11px;
   font-weight: 500;
-  margin-top: 2px;
+  margin-top: 4px;
+}
+
+.tab-icon {
+  width: 24px;
+  height: 24px;
+  color: currentColor;
 }
 </style>

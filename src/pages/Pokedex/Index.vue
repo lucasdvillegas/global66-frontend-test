@@ -13,7 +13,7 @@ import PokedexFilters from '@/components/Pokedex/PokedexFilters.vue'
 import EmptyState from '@/components/EmptyState.vue'
 
 // image
-import Magikarp from '@/assets/images/ui/magikarp_error.svg'
+import Magikarp from '@/assets/images/ui/magikarp_error.svg?url'
 
 const $q = useQuasar()
 const favoritesStore = useFavoritesStore()

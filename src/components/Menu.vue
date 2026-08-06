@@ -7,49 +7,36 @@
     @click="handleClick"
   >
     <q-item-section v-if="props.icon" avatar class="q-pr-none">
-      <q-img :src="icon" style="width: 24px; height: 24px" />
+      <component
+        :is="props.icon"
+        :class="isActive ? 'text-primary' : 'text-grey-7'"
+        style="width: 24px; height: 24px"
+      />
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ props.label }}</q-item-label>
+      <q-item-label :class="isActive ? 'text-primary' : 'text-grey-7'">{{
+        props.label
+      }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
+
 const props = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
+  label: String,
+  icon: Object,
+  to: String,
+})
 
-  caption: {
-    type: String,
-    default: '',
-  },
-
-  href: {
-    type: String,
-    default: null,
-  },
-
-  to: {
-    type: String,
-    default: null,
-  },
-
-  icon: {
-    type: String,
-    default: '',
-  },
-
-  link: {
-    type: String,
-    default: null,
-  },
+const isActive = computed(() => {
+  return route.path === props.to
 })
 
 function handleClick() {

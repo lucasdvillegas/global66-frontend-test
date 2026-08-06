@@ -3,7 +3,7 @@
     <div class="column items-center">
       <img
         alt="Quasar logo"
-        src="~@/assets/images/ui/Loader.svg"
+        src="~@/assets/images/ui/Loader.svg?url"
         style="width: 200px; height: 200px"
       />
 

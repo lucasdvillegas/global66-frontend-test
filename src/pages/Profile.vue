@@ -1,5 +1,5 @@
 <script setup>
-import Magikarp from '@/assets/images/ui/jigglypuff_soon.svg'
+import Magikarp from '@/assets/images/ui/jigglypuff_soon.svg?url'
 import EmptyState from '@/components/EmptyState.vue'
 </script>
 
